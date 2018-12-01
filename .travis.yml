@@ -4,8 +4,7 @@ addons:
   apt:
     packages:
       - lib32stdc++6
-install: echo "skipping pub get"
-before_script:
+install:
   - git clone https://github.com/flutter/flutter.git -b beta
   - ./flutter/bin/flutter doctor
 script:
