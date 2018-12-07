@@ -13,6 +13,7 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
 
-    expect(find.text('Flutter Demo Home Page'), findsNWidgets(2));
+    expect(find.text('Birb'), findsOneWidget);
+    expect(find.text('No Birbs a birbing'), findsOneWidget);
   });
 }
