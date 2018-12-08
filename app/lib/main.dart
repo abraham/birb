@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'no_content.dart';
+
 void main() {
   runApp(MyApp());
 
@@ -49,9 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         elevation: 0.0,
       ),
-      body: const Center(
-        child: Text('No Birbs a birbing'),
-      ),
+      body: const NoContent(),
     );
   }
 }
