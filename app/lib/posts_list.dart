@@ -9,7 +9,10 @@ class PostsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        children: _items.map((int index) => const PostItem()).toList());
+    return ListView(children: _itemList());
+  }
+
+  List<PostItem> _itemList() {
+    return _items.map((int index) => const PostItem()).toList();
   }
 }
