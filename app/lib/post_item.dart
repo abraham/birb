@@ -7,7 +7,7 @@ class PostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        height: 300.0,
+        height: 100.0,
         child: const Center(
           child: Text('Prim Birb'),
         ),
