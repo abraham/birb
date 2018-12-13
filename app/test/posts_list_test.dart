@@ -1,3 +1,5 @@
+import 'package:birb/models/post.dart';
+import 'package:birb/models/post_mock.dart';
 import 'package:birb/no_content.dart';
 import 'package:birb/post_item.dart';
 import 'package:birb/posts_list.dart';
@@ -9,7 +11,7 @@ void main() {
     testWidgets('renders list of PostItems', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaterialApp(
-        home: PostsList(_postsStream(5)),
+        home: PostsList(mockPosts(count: 5)),
       ));
 
       expect(find.text('Loading...'), findsOneWidget);
@@ -22,7 +24,7 @@ void main() {
     testWidgets('renders NoContent widget', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaterialApp(
-        home: PostsList(_postsStream(0)),
+        home: PostsList(mockPosts(count: 0)),
       ));
       await tester.pump(Duration.zero);
 
@@ -32,19 +34,11 @@ void main() {
     testWidgets('renders NoContent widget', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaterialApp(
-        home: PostsList(Future<List<int>>.error('Bad Connection').asStream()),
+        home: PostsList(Future<List<Post>>.error('Bad Connection').asStream()),
       ));
       await tester.pump(Duration.zero);
 
       expect(find.text('Error: Bad Connection'), findsOneWidget);
     });
   });
-}
-
-Stream<List<int>> _postsStream(int count) {
-  return Stream<List<int>>.fromIterable(
-    <List<int>>[
-      List<int>.generate(count, (int i) => i),
-    ],
-  );
 }

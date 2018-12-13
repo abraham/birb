@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'models/post.dart';
+import 'models/post_mock.dart';
 import 'posts_list.dart';
 
 void main() {
@@ -42,12 +44,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Stream<List<int>> _posts = Stream<List<int>>.fromIterable(
-    <List<int>>[
-      List<int>.generate(10, (int i) => i),
-    ],
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +53,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         elevation: 0.0,
       ),
-      body: PostsList(_posts),
+      body: PostsList(_loadPosts(context)),
     );
+  }
+
+  Stream<List<Post>> _loadPosts(BuildContext context) {
+    final List<List<dynamic>> mockSnapshot = <List<dynamic>>[
+      List<dynamic>.generate(10, (int index) => mockPostData(index: index))
+    ];
+    return Stream<List<dynamic>>.fromIterable(mockSnapshot)
+        .map(_convertToPosts);
+  }
+
+  List<Post> _convertToPosts(List<dynamic> data) {
+    return data.map((dynamic item) => Post.fromMap(item)).toList();
   }
 }
