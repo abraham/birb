@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'models/post.dart';
 import 'no_content.dart';
 import 'post_item.dart';
+import 'no_connection.dart';
 
 class PostsList extends StatelessWidget {
   const PostsList(this.posts);
@@ -15,12 +16,13 @@ class PostsList extends StatelessWidget {
       stream: posts,
       builder: (BuildContext context, AsyncSnapshot<List<Post>> snapshot) {
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return const BadConnection();
+          //return Text('Error: ${snapshot.error}');
         }
 
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return const Text('Loading...');
+            return const CircularProgressIndicator();
           default:
             if (snapshot.data.isEmpty) {
               return const NoContent();
