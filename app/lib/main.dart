@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'models/post.dart';
+import 'models/post_mock.dart';
 import 'posts_list.dart';
 
 void main() {
@@ -59,10 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Stream<List<Post>> _loadPosts(BuildContext context) {
-    return DefaultAssetBundle.of(context)
-        .loadString('assets/posts.json')
-        .then<List<dynamic>>((String value) => json.decode(value))
-        .asStream()
+    final List<List<dynamic>> mockSnapshot = <List<dynamic>>[
+      List<dynamic>.generate(10, (int index) => mockPostData(index: index))
+    ];
+    return Stream<List<dynamic>>.fromIterable(mockSnapshot)
         .map(_convertToPosts);
   }
 
