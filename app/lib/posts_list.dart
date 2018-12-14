@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'models/post.dart';
+import 'no_connection.dart';
 import 'no_content.dart';
 import 'post_item.dart';
-import 'no_connection.dart';
 
 class PostsList extends StatelessWidget {
   const PostsList(this.posts);
