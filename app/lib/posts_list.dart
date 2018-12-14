@@ -34,7 +34,10 @@ class PostsList extends StatelessWidget {
   ListView _itemList(List<Post> items) {
     return ListView(
       children: items.map((Post post) {
-        return PostItem(post);
+        return Container(
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+          child: PostItem(post),
+        );
       }).toList(),
     );
   }

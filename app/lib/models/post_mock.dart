@@ -31,7 +31,7 @@ Map<String, dynamic> mockPostData({int index = 0}) {
 
   return <String, dynamic>{
     'id': Uuid().v4(),
-    'imageUrl': 'https://source.unsplash.com/$imageId',
+    'imageUrl': 'https://source.unsplash.com/$imageId/400',
     'createdAt': createdAt,
     'text': faker.conference.name(),
     'username': faker.person.name()
