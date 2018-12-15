@@ -22,6 +22,9 @@ dependencies:
 
   flutter_svg: ^0.7.0
 
+  google_sign_in: ^3.2.4
+  firebase_auth: ^0.6.6
+
   # TODO: Move to dev_dependencies
   faker: ^1.0.0
   uuid: ^1.0.3
