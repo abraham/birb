@@ -1,5 +1,6 @@
 import 'package:birb/main.dart';
 import 'package:birb/posts_list.dart';
+import 'package:birb/sign_in_fab.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -9,5 +10,6 @@ void main() {
 
     expect(find.text('Birb'), findsOneWidget);
     expect(find.byType(PostsList), findsOneWidget);
+    expect(find.byType(SignInFab), findsOneWidget);
   });
 }
