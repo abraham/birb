@@ -16,7 +16,7 @@ void main() {
           home: PostsList(mockPosts(count: 5)),
         ));
 
-        expect(find.text('Loading...'), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
         await tester.pump(Duration.zero);
 
