@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'bad_connection.dart';
 import 'models/post.dart';
 import 'no_content.dart';
 import 'post_item.dart';
@@ -15,7 +15,7 @@ class PostsList extends StatelessWidget {
       stream: posts,
       builder: (BuildContext context, AsyncSnapshot<List<Post>> snapshot) {
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return const BadConnection();
         }
 
         switch (snapshot.connectionState) {
