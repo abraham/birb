@@ -72,3 +72,4 @@ build/
 
 # Google services config
 google-services.json
+GoogleService-Info.plist
