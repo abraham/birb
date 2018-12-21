@@ -34,7 +34,7 @@ void main() {
       expect(find.byType(NoContent), findsOneWidget);
     });
 
-    testWidgets('renders NoContent widget', (WidgetTester tester) async {
+    testWidgets('renders error text', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaterialApp(
         home: PostsList(Future<List<Post>>.error('Bad Connection').asStream()),
