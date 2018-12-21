@@ -58,6 +58,7 @@ flutter:
   assets:
     - assets/undraw_a_day_at_the_park_owg1.svg
     - assets/google_g_logo.png
+    - assets/bad_connection.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

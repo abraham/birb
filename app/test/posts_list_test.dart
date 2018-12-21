@@ -16,7 +16,7 @@ void main() {
           home: PostsList(mockPosts(count: 5)),
         ));
 
-        expect(find.text('Loading...'), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
         await tester.pump(Duration.zero);
 
@@ -34,14 +34,15 @@ void main() {
       expect(find.byType(NoContent), findsOneWidget);
     });
 
-    testWidgets('renders NoContent widget', (WidgetTester tester) async {
+    testWidgets('renders BadConnection widget', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaterialApp(
         home: PostsList(Future<List<Post>>.error('Bad Connection').asStream()),
       ));
       await tester.pump(Duration.zero);
 
-      expect(find.text('Error: Bad Connection'), findsOneWidget);
+      expect(find.text('Bad Connection: Unable to reach the avary'),
+          findsOneWidget);
     });
   });
 }
