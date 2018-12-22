@@ -2,6 +2,8 @@ import 'package:birb/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'pages/register_page.dart';
+
 class SignInFab extends StatelessWidget {
   const SignInFab({
     @required this.auth,
@@ -19,13 +21,26 @@ class SignInFab extends StatelessWidget {
   }
 
   void _handleSignIn(BuildContext context) {
-    auth.signInWithGoogle().then((FirebaseUser user) =>
-        _showSnackBar(context, 'Welcome ${user.displayName}'));
+    auth.signInWithGoogle().then((FirebaseUser user) {
+      if (_existingUser()) {
+        _showSnackBar(context, 'Welcome ${user.displayName}');
+      } else {
+        _navigateToRegistration(context);
+      }
+    });
+  }
+
+  bool _existingUser() {
+    return true;
   }
 
   void _showSnackBar(BuildContext context, String msg) {
     final SnackBar snackBar = SnackBar(content: Text(msg));
 
     Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void _navigateToRegistration(BuildContext context) {
+    Navigator.pushNamed(context, RegisterPage.routeName);
   }
 }

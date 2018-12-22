@@ -1,6 +1,6 @@
 import 'package:birb/main.dart';
-import 'package:birb/posts_list.dart';
-import 'package:birb/sign_in_fab.dart';
+import 'package:birb/pages/home_page.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -9,7 +9,7 @@ void main() {
     await tester.pumpWidget(MyApp());
 
     expect(find.text('Birb'), findsOneWidget);
-    expect(find.byType(PostsList), findsOneWidget);
-    expect(find.byType(SignInFab), findsOneWidget);
+    expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.byType(HomePage), findsOneWidget);
   });
 }
