@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../forms/register_form.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key}) : super(key: key);
 
@@ -18,8 +20,11 @@ class _RegisterPageState extends State<RegisterPage> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: const Center(
-        child: Text('Register'),
+      body: const SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+          child: RegisterForm(),
+        ),
       ),
     );
   }
