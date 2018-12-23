@@ -3,18 +3,12 @@ import 'package:flutter/services.dart';
 
 import 'pages/home_page.dart';
 import 'pages/register_page.dart';
+import 'theme.dart';
 
 void main() {
   runApp(MyApp());
 
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarDividerColor: Colors.black,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ),
-  );
+  SystemChrome.setSystemUIOverlayStyle(lightSystemUiOverlayStyle);
 }
 
 class MyApp extends StatelessWidget {
@@ -23,12 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Birb',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.white,
-        accentColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
-      ),
+      theme: buildThemeData(),
       home: const HomePage(title: 'Birb'),
       routes: <String, WidgetBuilder>{
         RegisterPage.routeName: (BuildContext context) => const RegisterPage(),
