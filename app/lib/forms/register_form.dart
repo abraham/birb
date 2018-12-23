@@ -76,8 +76,11 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   void _submit() {
-    _formKey.currentState.validate();
-    print('Form submitted');
+    if (_formKey.currentState.validate()) {
+      const SnackBar snackBar = SnackBar(content: Text('Form submitted'));
+
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
   }
 
   void _setAgreedToTOS(bool newValue) {

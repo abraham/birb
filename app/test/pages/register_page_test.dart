@@ -1,3 +1,4 @@
+import 'package:birb/forms/register_form.dart';
 import 'package:birb/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,5 +13,6 @@ void main() {
     await tester.pumpWidget(app);
 
     expect(find.text('Register'), findsNWidgets(2));
+    expect(find.byType(RegisterForm), findsOneWidget);
   });
 }
