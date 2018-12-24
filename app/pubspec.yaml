@@ -25,6 +25,8 @@ dependencies:
   google_sign_in: ^3.2.4
   firebase_auth: ^0.6.6
 
+  cloud_firestore: ^0.8.2
+
   # TODO: Move to dev_dependencies
   faker: ^1.0.0
   uuid: ^1.0.3
