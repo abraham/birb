@@ -1,0 +1,14 @@
+{
+  "name": "birb",
+  "version": "0.1.0",
+  "description": "Instagram for birds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abraham Williams <abraham@abrah.am>",
+  "license": "MIT",
+  "devDependencies": {
+    "firebase-tools": "^6.2.2"
+  }
+}
