@@ -42,6 +42,8 @@ dev_dependencies:
 
   image_test_utils: ^1.0.0
 
+  flutter_launcher_icons: ^0.7.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
@@ -86,3 +88,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/icon/ic_launcher_xxxhdpi.png
+  image_path_ios: assets/icon/ios.png
+  adaptive_icon_background: assets/icon/ic_background.png
+  adaptive_icon_foreground: assets/icon/ic_foreground.png
