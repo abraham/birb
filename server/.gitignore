@@ -63,3 +63,7 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+# compiled test files
+test/**/*.js
+test/**/*.js.map
