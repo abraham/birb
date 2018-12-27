@@ -1,14 +1,29 @@
 {
-  "name": "birb",
+  "name": "Birb",
   "version": "0.1.0",
   "description": "Instagram for birds",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "firebase setup:emulators:firestore",
+    "start-emulator": "firebase serve --only firestore > /dev/null",
+    "pretest": "tsc",
+    "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' mocha",
+    "posttest": "rm test/**/*.js test/**/*.map",
+    "ci": "start-server-and-test start-emulator http-get://127.0.0.1:8080 test"
   },
   "author": "Abraham Williams <abraham@abrah.am>",
   "license": "MIT",
   "devDependencies": {
-    "firebase-tools": "^6.2.2"
+    "@firebase/testing": "^0.5.1",
+    "@types/mocha": "^5.2.5",
+    "@types/uuid": "^3.4.4",
+    "firebase-admin": "^6.4.0",
+    "firebase-tools": "^6.2.2",
+    "mocha": "^5.2.0",
+    "mocha-typescript": "^1.1.17",
+    "start-server-and-test": "^1.7.11",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2",
+    "uuid": "^3.3.2"
   }
 }
