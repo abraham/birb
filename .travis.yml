@@ -1,21 +1,43 @@
-language: dart
 dist: xenial
 matrix:
   include:
-    - name: Test
-      env: COMMAND=test
-    - name: Analyze
-      env: COMMAND=analyze
-addons:
-  apt:
-    packages:
-      - lib32stdc++6
-install:
-  - git clone https://github.com/flutter/flutter.git -b beta
-  - ./flutter/bin/flutter doctor
-script:
-  - cd app
-  - ../flutter/bin/flutter $COMMAND
+    # - name: app test
+    #   language: dart
+    #   addons:
+    #     apt:
+    #       packages:
+    #         - lib32stdc++6
+    #   install:
+    #     - git clone https://github.com/flutter/flutter.git -b beta
+    #     - ./flutter/bin/flutter doctor
+    #   script:
+    #     - cd app
+    #     - ../flutter/bin/flutter test
+    # - name: app lint
+    #   language: dart
+    #   addons:
+    #     apt:
+    #       packages:
+    #         - lib32stdc++6
+    #   install:
+    #     - git clone https://github.com/flutter/flutter.git -b beta
+    #     - ./flutter/bin/flutter doctor
+    #   script:
+    #     - cd app
+    #     - ../flutter/bin/flutter analyze
+    - name: server test
+      language: node_js
+      node_js: "10"
+      before_install:
+        - java --version
+      install:
+        - cd server
+        - npm ci
+      script:
+        - npx firebase setup:emulators:firestore --debug
+        - npm run ci
+
 cache:
+  # npm: true
   directories:
     - $HOME/.pub-cache
