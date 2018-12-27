@@ -4,8 +4,8 @@
   "description": "Instagram for birds",
   "main": "index.js",
   "scripts": {
-    "postinstall": "firebase setup:emulators:firestore",
-    "start-emulator": "firebase serve --only firestore > /dev/null",
+    "postinstall": "firebase setup:emulators:firestore --debug",
+    "start-emulator": "firebase serve --only firestore --debug",
     "pretest": "tsc",
     "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' mocha",
     "posttest": "rm test/**/*.js test/**/*.map",
