@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "firebase setup:emulators:firestore",
-    "start-emulator": "firebase serve --only firestore > /dev/null",
+    "start-emulator": "firebase serve --only firestore",
     "pretest": "tsc",
     "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' mocha",
     "posttest": "rm test/**/*.js test/**/*.map",
@@ -14,7 +14,7 @@
   "author": "Abraham Williams <abraham@abrah.am>",
   "license": "MIT",
   "devDependencies": {
-    "@firebase/testing": "^0.5.1",
+    "@firebase/testing": "^0.5.2",
     "@types/mocha": "^5.2.5",
     "@types/uuid": "^3.4.4",
     "firebase-admin": "^6.4.0",

@@ -1,8 +1,46 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read: if true;
-      allow write: if false;
+    function data() {
+      return request.resource.data;
+    }
+
+    function isOwner(userId) {
+      return request.auth != null &&
+             request.auth.uid == userId;
+    }
+
+    function validString(key) {
+      return data()[key].trim() == data()[key] &&
+             data()[key].size() > 0;
+    }
+
+    function validUrl(url) {
+      return url.matches('https://[a-zA-Z].+');
+    }
+
+    function validCreateTimestamps() {
+      return data().updatedAt == request.time &&
+             data().createdAt == request.time;
+    }
+
+    match /users/{userId} {
+      function validUser() {
+        // TODO: prevent extra fields
+        return validString('nickname') &&
+               validString('fullName') &&
+               validString('photoUrl') &&
+               validUrl(data().photoUrl);
+      }
+
+      function validCreateUser() {
+        return validUser() &&
+               data().agreedToTermsAt == request.time;
+      }
+
+      allow create: if isOwner(userId) &&
+                       // TODO: enable after bug fix https://github.com/firebase/firebase-tools/issues/1073
+                       //  validCreateTimestamps() &&
+                       validCreateUser();
     }
   }
 }
