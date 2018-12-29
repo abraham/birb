@@ -23,6 +23,25 @@ class User extends UserTest {
     const user = this.db().collection('users').doc(uuid.v4());
     await firebase.assertFails(user.set(this.validUser));
   }
+
+  @test
+  async 'can read self'() {
+    const uid = this.user().uid;
+    const user = this.db({ uid }).collection('users').doc(uid);
+    await firebase.assertSucceeds(user.get());
+  }
+
+  @test
+  async 'can not read someone else'() {
+    const user = this.db(this.user()).collection('users').doc(uuid.v4());
+    await firebase.assertFails(user.get());
+  }
+
+  @test
+  async 'can not read'() {
+    const user = this.db().collection('users').doc(uuid.v4());
+    await firebase.assertFails(user.get());
+  }
 }
 
 [
