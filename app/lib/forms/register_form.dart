@@ -1,7 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/home_page.dart';
+import '../services/user_service.dart';
+
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({Key key}) : super(key: key);
+  const RegisterForm({
+    Key key,
+    @required this.firebaseUser,
+    @required this.userService,
+  }) : super(key: key);
+
+  final FirebaseUser firebaseUser;
+  final UserService userService;
 
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -10,6 +21,11 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _agreedToTOS = true;
+  final Map<String, String> _formData = <String, String>{
+    'nickname': '',
+    'fullName': '',
+    'photoUrl': '',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +35,7 @@ class _RegisterFormState extends State<RegisterForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
+            initialValue: _initialNickname(),
             decoration: const InputDecoration(
               labelText: 'Nickname',
             ),
@@ -27,9 +44,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 return 'Nickname is required';
               }
             },
+            onSaved: (String value) => _formData['nickname'] = value,
           ),
           const SizedBox(height: 16.0),
           TextFormField(
+            initialValue: widget.firebaseUser.displayName,
             decoration: const InputDecoration(
               labelText: 'Full name',
             ),
@@ -38,6 +57,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 return 'Full name is required';
               }
             },
+            onSaved: (String value) => _formData['fullName'] = value,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -75,12 +95,30 @@ class _RegisterFormState extends State<RegisterForm> {
     return _agreedToTOS;
   }
 
-  void _submit() {
-    if (_formKey.currentState.validate()) {
-      const SnackBar snackBar = SnackBar(content: Text('Form submitted'));
+  String _initialNickname() {
+    return widget.firebaseUser.displayName.split(' ').first;
+  }
 
-      Scaffold.of(context).showSnackBar(snackBar);
+  Future<void> _submit() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      _formData['photoUrl'] = widget.firebaseUser.photoUrl;
+
+      final bool result =
+          await widget.userService.addUser(widget.firebaseUser.uid, _formData);
+      if (result) {
+        _showSnackBar(context, 'Welcome ${_formData['fullName']}');
+        Navigator.pushNamed(context, HomePage.routeName);
+      } else {
+        _showSnackBar(context, 'Error submitting form');
+      }
     }
+  }
+
+  void _showSnackBar(BuildContext context, String msg) {
+    final SnackBar snackBar = SnackBar(content: Text(msg));
+
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   void _setAgreedToTOS(bool newValue) {

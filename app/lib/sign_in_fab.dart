@@ -7,9 +7,11 @@ import 'pages/register_page.dart';
 class SignInFab extends StatelessWidget {
   const SignInFab({
     @required this.auth,
+    this.existingUser = false,
   });
 
   final Auth auth;
+  final bool existingUser;
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +24,12 @@ class SignInFab extends StatelessWidget {
 
   void _handleSignIn(BuildContext context) {
     auth.signInWithGoogle().then((FirebaseUser user) {
-      if (_existingUser()) {
+      if (existingUser) {
         _showSnackBar(context, 'Welcome ${user.displayName}');
       } else {
         _navigateToRegistration(context);
       }
     });
-  }
-
-  bool _existingUser() {
-    return true;
   }
 
   void _showSnackBar(BuildContext context, String msg) {

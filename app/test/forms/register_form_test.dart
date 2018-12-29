@@ -1,12 +1,22 @@
 import 'package:birb/forms/register_form.dart';
+import 'package:birb/services/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../mocks/firebase_user_mock.dart';
+import '../mocks/user_service_mock.dart';
+
 void main() {
-  const MaterialApp app = MaterialApp(
+  final FirebaseUser userMock = FirebaseUserMock();
+  final UserService userServiceMock = UserServiceMock();
+  final MaterialApp app = MaterialApp(
     home: Scaffold(
       body: SingleChildScrollView(
-        child: RegisterForm(),
+        child: RegisterForm(
+          firebaseUser: userMock,
+          userService: userServiceMock,
+        ),
       ),
     ),
   );
@@ -22,7 +32,22 @@ void main() {
     expect(find.byType(Checkbox), findsOneWidget);
   });
 
-  testWidgets('Form can be submitted', (WidgetTester tester) async {
+  testWidgets('Form can be submitted with prefilled names',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    final Finder submit = find.widgetWithText(OutlineButton, 'Register');
+
+    expect(find.byType(SnackBar), findsNothing);
+
+    await tester.tap(submit);
+    await tester.pump();
+
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text('Welcome ${userMock.displayName}'), findsOneWidget);
+  });
+
+  testWidgets('Form can be submitted with new names',
+      (WidgetTester tester) async {
     await tester.pumpWidget(app);
     final Finder nickname = find.widgetWithText(TextFormField, 'Nickname');
     final Finder fullName = find.widgetWithText(TextFormField, 'Full name');
@@ -31,17 +56,20 @@ void main() {
     expect(find.text('Form submitted'), findsNothing);
 
     await tester.enterText(nickname, 'Jess');
-    await tester.enterText(fullName, 'Jess Sampson');
+    await tester.enterText(fullName, 'Jess Jesserson');
 
     await tester.tap(submit);
     await tester.pump();
 
-    expect(find.text('Form submitted'), findsOneWidget);
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text('Welcome Jess Jesserson'), findsOneWidget);
   });
 
   testWidgets('Form requires nickname', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     final Finder submit = find.widgetWithText(OutlineButton, 'Register');
+    final Finder nickname = find.widgetWithText(TextFormField, 'Nickname');
+    await tester.enterText(nickname, '');
     await tester.tap(submit);
     await tester.pump();
 
@@ -52,6 +80,8 @@ void main() {
   testWidgets('Form requires full name', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     final Finder submit = find.widgetWithText(OutlineButton, 'Register');
+    final Finder fullName = find.widgetWithText(TextFormField, 'Full name');
+    await tester.enterText(fullName, '');
     await tester.tap(submit);
     await tester.pump();
 

@@ -11,6 +11,7 @@ import '../sign_in_fab.dart';
 class HomePage extends StatefulWidget {
   const HomePage({Key key, this.title}) : super(key: key);
 
+  static const String routeName = '/';
   final String title;
 
   @override
