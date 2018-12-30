@@ -9,12 +9,15 @@ void main() {
   testWidgets('Renders a post', (WidgetTester tester) async {
     provideMockedNetworkImages(() async {
       final Post post = mockPost();
-      // Build our app and trigger a frame.
       await tester.pumpWidget(MaterialApp(
         home: PostItem(post),
       ));
+      final Finder hero = find.byType(Hero);
 
+      expect(hero, findsOneWidget);
+      expect(find.byType(ClipRRect), findsOneWidget);
       expect(find.byType(Image), findsOneWidget);
+      expect(tester.widget<Hero>(hero).tag, post.id);
       expect(find.text(post.username), findsOneWidget);
       expect(find.text(post.text), findsOneWidget);
     });

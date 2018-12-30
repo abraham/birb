@@ -12,9 +12,12 @@ class PostItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        ClipRRect(
-          child: Image.network(post.imageUrl),
-          borderRadius: BorderRadius.circular(10.0),
+        Hero(
+          tag: post.id,
+          child: ClipRRect(
+            child: Image.network(post.imageUrl),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
         ),
         const SizedBox(height: 8.0),
         Text(
