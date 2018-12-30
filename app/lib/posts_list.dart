@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'models/post.dart';
 import 'no_content.dart';
+import 'pages/post_page.dart';
 import 'post_item.dart';
 
 class PostsList extends StatelessWidget {
@@ -25,20 +26,48 @@ class PostsList extends StatelessWidget {
             if (snapshot.data.isEmpty) {
               return const NoContent();
             }
-            return _itemList(snapshot.data);
+            return _itemList(context, snapshot.data);
         }
       },
     );
   }
 
-  ListView _itemList(List<Post> items) {
+  ListView _itemList(BuildContext context, List<Post> items) {
     return ListView(
       children: items.map((Post post) {
         return Container(
           padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-          child: PostItem(post),
+          child: InkWell(
+            onTap: () => _navigateToPost(context, post),
+            child: PostItem(post),
+          ),
         );
       }).toList(),
+    );
+  }
+
+  void _navigateToPost(BuildContext context, Post post) {
+    Navigator.of(context).push(
+      PageRouteBuilder<PostPage>(
+        pageBuilder: (
+          BuildContext context,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return PostPage(post: post);
+        },
+        transitionsBuilder: (
+          BuildContext context,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,
+          Widget child,
+        ) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
     );
   }
 }

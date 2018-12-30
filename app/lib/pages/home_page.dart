@@ -3,16 +3,20 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../models/current_user_model.dart';
 import '../models/post.dart';
-import '../models/post_mock.dart';
 import '../posts_list.dart';
 import '../sign_in_fab.dart';
 import '../sign_out_action.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key, this.title}) : super(key: key);
+  const HomePage({
+    Key key,
+    @required this.title,
+    @required this.posts,
+  }) : super(key: key);
 
   static const String routeName = '/';
   final String title;
+  final Stream<List<Post>> posts;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -30,7 +34,7 @@ class _HomePageState extends State<HomePage> {
           SignOutAction(),
         ],
       ),
-      body: PostsList(_loadPosts(context)),
+      body: PostsList(widget.posts),
       floatingActionButton: _floatingActionButton(),
     );
   }
@@ -44,17 +48,5 @@ class _HomePageState extends State<HomePage> {
       ) =>
           model.user == null ? const SignInFab() : Container(),
     );
-  }
-
-  Stream<List<Post>> _loadPosts(BuildContext context) {
-    final List<List<dynamic>> mockSnapshot = <List<dynamic>>[
-      List<dynamic>.generate(10, (int index) => mockPostData(index: index))
-    ];
-    return Stream<List<dynamic>>.fromIterable(mockSnapshot)
-        .map(_convertToPosts);
-  }
-
-  List<Post> _convertToPosts(List<dynamic> data) {
-    return data.map((dynamic item) => Post.fromMap(item)).toList();
   }
 }
