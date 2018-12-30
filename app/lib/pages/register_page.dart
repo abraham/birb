@@ -1,4 +1,6 @@
+import 'package:birb/models/current_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../forms/register_form.dart';
 
@@ -20,10 +22,26 @@ class _RegisterPageState extends State<RegisterPage> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-          child: RegisterForm(),
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+          child: ScopedModelDescendant<CurrentUserModel>(
+            builder: (
+              BuildContext context,
+              Widget child,
+              CurrentUserModel model,
+            ) {
+              if (model.status == Status.Unregistered) {
+                return const RegisterForm();
+              } else if (model.status == Status.Authenticated) {
+                return const Center(
+                  child: Text('Welcome'),
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
+          ),
         ),
       ),
     );

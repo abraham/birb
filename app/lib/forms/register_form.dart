@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../models/current_user_model.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({Key key}) : super(key: key);
@@ -10,15 +13,25 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _agreedToTOS = true;
+  FirebaseUser _firebaseUser;
+  // TODO(abraham): refactor _formData to use a class.
+  final Map<String, String> _formData = <String, String>{
+    'nickname': '',
+    'fullName': '',
+    'photoUrl': '',
+  };
 
   @override
   Widget build(BuildContext context) {
+    _firebaseUser = CurrentUserModel.of(context).firebaseUser;
+
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
+            initialValue: _initialNickname(),
             decoration: const InputDecoration(
               labelText: 'Nickname',
             ),
@@ -27,9 +40,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 return 'Nickname is required';
               }
             },
+            onSaved: (String value) => _formData['nickname'] = value,
           ),
           const SizedBox(height: 16.0),
           TextFormField(
+            initialValue: _firebaseUser.displayName,
             decoration: const InputDecoration(
               labelText: 'Full name',
             ),
@@ -38,6 +53,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 return 'Full name is required';
               }
             },
+            onSaved: (String value) => _formData['fullName'] = value,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -75,12 +91,27 @@ class _RegisterFormState extends State<RegisterForm> {
     return _agreedToTOS;
   }
 
-  void _submit() {
-    if (_formKey.currentState.validate()) {
-      const SnackBar snackBar = SnackBar(content: Text('Form submitted'));
+  String _initialNickname() {
+    return _firebaseUser.displayName.split(' ').first;
+  }
 
-      Scaffold.of(context).showSnackBar(snackBar);
+  Future<void> _submit() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      _formData['photoUrl'] = _firebaseUser.photoUrl;
+
+      try {
+        await CurrentUserModel.of(context).register(_formData);
+      } catch (e) {
+        _showSnackBar(context, 'Error submitting form');
+      }
     }
+  }
+
+  void _showSnackBar(BuildContext context, String msg) {
+    final SnackBar snackBar = SnackBar(content: Text(msg));
+
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   void _setAgreedToTOS(bool newValue) {

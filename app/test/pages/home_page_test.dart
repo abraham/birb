@@ -1,12 +1,15 @@
 import 'package:birb/pages/home_page.dart';
 import 'package:birb/posts_list.dart';
 import 'package:birb/sign_in_fab.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../mocks/app_mock.dart';
+import '../mocks/current_user_model_mock.dart';
+
 void main() {
-  const MaterialApp app = MaterialApp(
-    home: HomePage(title: 'Awesome'),
+  final dynamic app = appMock(
+    child: const HomePage(title: 'Awesome'),
+    mock: CurrentUserModelMock(),
   );
 
   testWidgets('Renders list of posts', (WidgetTester tester) async {

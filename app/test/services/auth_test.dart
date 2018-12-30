@@ -1,4 +1,4 @@
-import 'package:birb/services/auth.dart';
+import 'package:birb/services/auth_service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -17,7 +17,7 @@ void main() {
         GoogleSignInAccountMock();
     final GoogleSignInAuthenticationMock googleSignInAuthenticationMock =
         GoogleSignInAuthenticationMock();
-    final Auth auth = Auth(
+    final AuthService auth = AuthService(
       firebaseAuth: firebaseAuthMock,
       googleSignIn: googleSignInMock,
     );
@@ -35,7 +35,7 @@ void main() {
         accessToken: googleSignInAuthenticationMock.accessToken,
       )).thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
 
-      expect(await auth.signInWithGoogle(), firebaseUserMock);
+      await auth.signInWithGoogle();
 
       verify(googleSignInMock.signIn()).called(1);
       verify(googleSignInAccountMock.authentication).called(1);

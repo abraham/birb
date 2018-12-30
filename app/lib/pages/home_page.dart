@@ -1,16 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:scoped_model/scoped_model.dart';
 
+import '../models/current_user_model.dart';
 import '../models/post.dart';
 import '../models/post_mock.dart';
 import '../posts_list.dart';
-import '../services/auth.dart';
 import '../sign_in_fab.dart';
+import '../sign_out_action.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key, this.title}) : super(key: key);
 
+  static const String routeName = '/';
   final String title;
 
   @override
@@ -25,14 +26,23 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
         centerTitle: true,
         elevation: 0.0,
+        actions: const <Widget>[
+          SignOutAction(),
+        ],
       ),
       body: PostsList(_loadPosts(context)),
-      floatingActionButton: SignInFab(
-        auth: Auth(
-          firebaseAuth: FirebaseAuth.instance,
-          googleSignIn: GoogleSignIn(),
-        ),
-      ),
+      floatingActionButton: _floatingActionButton(),
+    );
+  }
+
+  Widget _floatingActionButton() {
+    return ScopedModelDescendant<CurrentUserModel>(
+      builder: (
+        BuildContext context,
+        Widget child,
+        CurrentUserModel model,
+      ) =>
+          model.user == null ? const SignInFab() : Container(),
     );
   }
 
