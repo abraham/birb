@@ -1,18 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../pages/home_page.dart';
-import '../services/user_service.dart';
+import '../models/current_user_model.dart';
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({
-    Key key,
-    @required this.firebaseUser,
-    @required this.userService,
-  }) : super(key: key);
-
-  final FirebaseUser firebaseUser;
-  final UserService userService;
+  const RegisterForm({Key key}) : super(key: key);
 
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -21,6 +13,8 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _agreedToTOS = true;
+  FirebaseUser _firebaseUser;
+  // TODO(abraham): refactor _formData to use a class.
   final Map<String, String> _formData = <String, String>{
     'nickname': '',
     'fullName': '',
@@ -29,6 +23,8 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    _firebaseUser = CurrentUserModel.of(context).firebaseUser;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -48,7 +44,7 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           const SizedBox(height: 16.0),
           TextFormField(
-            initialValue: widget.firebaseUser.displayName,
+            initialValue: _firebaseUser.displayName,
             decoration: const InputDecoration(
               labelText: 'Full name',
             ),
@@ -96,20 +92,17 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   String _initialNickname() {
-    return widget.firebaseUser.displayName.split(' ').first;
+    return _firebaseUser.displayName.split(' ').first;
   }
 
   Future<void> _submit() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      _formData['photoUrl'] = widget.firebaseUser.photoUrl;
+      _formData['photoUrl'] = _firebaseUser.photoUrl;
 
-      final bool result =
-          await widget.userService.addUser(widget.firebaseUser.uid, _formData);
-      if (result) {
-        _showSnackBar(context, 'Welcome ${_formData['fullName']}');
-        Navigator.pushNamed(context, HomePage.routeName);
-      } else {
+      try {
+        await CurrentUserModel.of(context).register(_formData);
+      } catch (e) {
         _showSnackBar(context, 'Error submitting form');
       }
     }

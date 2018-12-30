@@ -27,6 +27,8 @@ dependencies:
 
   cloud_firestore: ^0.8.2
 
+  scoped_model: ^1.0.1
+
   # TODO: Move to dev_dependencies
   faker: ^1.0.0
   uuid: ^1.0.3

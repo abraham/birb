@@ -1,39 +1,27 @@
+import 'package:birb/models/current_user_model.dart';
+import 'package:birb/models/user.dart';
 import 'package:birb/pages/register_page.dart';
-import 'package:birb/services/auth.dart';
-import 'package:birb/services/user_service.dart';
 import 'package:birb/sign_in_fab.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'mocks/auth_mock.dart';
+import 'mocks/app_mock.dart';
+import 'mocks/current_user_model_mock.dart';
 import 'mocks/firebase_user_mock.dart';
-import 'mocks/user_service_mock.dart';
+import 'mocks/user_mock.dart';
 
 void main() {
-  final Auth mock = AuthMock();
-  final FirebaseUser userMock = FirebaseUserMock();
-  final UserService userServiceMock = UserServiceMock();
-
-  MaterialApp app({bool existingUser = true}) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SignInFab(
-          auth: mock,
-          existingUser: existingUser,
-        ),
-      ),
-      routes: <String, WidgetBuilder>{
-        RegisterPage.routeName: (BuildContext context) =>
-            RegisterPage(userService: userServiceMock),
-      },
-    );
-  }
+  final CurrentUserModel mock = CurrentUserModelMock();
+  final User userMock = UserMock();
+  final FirebaseUser firebaseUserMock = FirebaseUserMock();
 
   testWidgets('Renders sign in', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(app());
+    await tester.pumpWidget(appMock(
+      child: const SignInFab(),
+      mock: mock,
+    ));
 
     expect(find.byType(Image), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
@@ -41,24 +29,27 @@ void main() {
     expect(find.byType(SnackBar), findsNothing);
   });
 
-  testWidgets('Calls signs in when tapped', (WidgetTester tester) async {
-    when(mock.signInWithGoogle())
-        .thenAnswer((_) => Future<FirebaseUser>.value(userMock));
+  testWidgets('Calls sign in when tapped', (WidgetTester tester) async {
+    when(mock.signIn()).thenAnswer((_) => Future<FirebaseUser>.value());
 
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(app());
-
-    expect(find.byType(Image), findsOneWidget);
-
+    await tester.pumpWidget(appMock(
+      child: const SignInFab(),
+      mock: mock,
+    ));
     await tester.tap(find.byType(FloatingActionButton));
 
-    verify(mock.signInWithGoogle()).called(1);
+    verify(mock.signIn()).called(1);
   });
 
   testWidgets('Displays welcome message for existing user',
       (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(app());
+    when(mock.status).thenReturn(Status.Authenticated);
+    when(mock.user).thenReturn(userMock);
+
+    await tester.pumpWidget(appMock(
+      child: const SignInFab(),
+      mock: mock,
+    ));
 
     expect(find.byType(SnackBar), findsNothing);
 
@@ -66,13 +57,19 @@ void main() {
     await tester.pump(Duration.zero);
 
     expect(find.byType(SnackBar), findsOneWidget);
-    expect(find.text('Welcome ${userMock.displayName}'), findsOneWidget);
+    expect(find.text('Welcome ${userMock.fullName}'), findsOneWidget);
   });
 
-  testWidgets('Displays register form for new user',
+  testWidgets('Displays registration form for new user',
       (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(app(existingUser: false));
+    when(mock.status).thenReturn(Status.Unregistered);
+    when(mock.user).thenReturn(userMock);
+    when(mock.firebaseUser).thenReturn(firebaseUserMock);
+
+    await tester.pumpWidget(appMock(
+      child: const SignInFab(),
+      mock: mock,
+    ));
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pump(Duration.zero);
     await tester.pump(Duration.zero);

@@ -10,7 +10,7 @@ class UserServiceMock extends Mock implements UserService {
   bool success;
 
   @override
-  Future<bool> addUser(String uid, Map<String, String> formData) async {
+  Future<bool> createUser(String uid, Map<String, String> formData) async {
     return success;
   }
 

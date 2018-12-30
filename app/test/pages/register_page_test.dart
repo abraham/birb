@@ -1,21 +1,25 @@
 import 'package:birb/forms/register_form.dart';
+import 'package:birb/models/current_user_model.dart';
 import 'package:birb/pages/register_page.dart';
-import 'package:birb/services/user_service.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
-import '../mocks/user_service_mock.dart';
+import '../mocks/app_mock.dart';
+import '../mocks/current_user_model_mock.dart';
+import '../mocks/firebase_user_mock.dart';
 
 void main() {
-  final UserService userServiceMock = UserServiceMock();
-  final MaterialApp app = MaterialApp(
-    home: RegisterPage(
-      userService: userServiceMock,
-    ),
+  final CurrentUserModel mock = CurrentUserModelMock();
+  final FirebaseUser firebaseUserMock = FirebaseUserMock();
+  when(mock.firebaseUser).thenReturn(firebaseUserMock);
+  final dynamic app = appMock(
+    child: const RegisterPage(),
+    mock: mock,
   );
 
   testWidgets('Renders', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+    when(mock.status).thenReturn(Status.Unregistered);
     await tester.pumpWidget(app);
     await tester.pump(Duration.zero);
 

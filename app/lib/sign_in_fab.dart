@@ -1,17 +1,11 @@
-import 'package:birb/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'models/current_user_model.dart';
+import 'models/user.dart';
 import 'pages/register_page.dart';
 
 class SignInFab extends StatelessWidget {
-  const SignInFab({
-    @required this.auth,
-    this.existingUser = false,
-  });
-
-  final Auth auth;
-  final bool existingUser;
+  const SignInFab();
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +16,19 @@ class SignInFab extends StatelessWidget {
     );
   }
 
-  void _handleSignIn(BuildContext context) {
-    auth.signInWithGoogle().then((FirebaseUser user) {
-      if (existingUser) {
-        _showSnackBar(context, 'Welcome ${user.displayName}');
-      } else {
-        _navigateToRegistration(context);
-      }
-    });
+  Future<void> _handleSignIn(BuildContext context) async {
+    final CurrentUserModel currentUserModel = CurrentUserModel.of(context);
+    await currentUserModel.signIn();
+    if (currentUserModel.status == Status.Unregistered) {
+      _navigateToRegistration(context);
+    } else if (currentUserModel.status == Status.Authenticated) {
+      final User user = currentUserModel.user;
+      _showSnackBar(context, 'Welcome ${user.fullName}');
+    }
   }
 
   void _showSnackBar(BuildContext context, String msg) {
     final SnackBar snackBar = SnackBar(content: Text(msg));
-
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
